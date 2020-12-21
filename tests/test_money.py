@@ -2,6 +2,7 @@ from django.utils.translation import override
 
 import pytest
 
+from decimal import Decimal
 from djmoney.money import Money, get_current_locale
 
 
@@ -27,6 +28,15 @@ def test_default_mul():
 
 def test_default_truediv():
     assert Money(10, "USD") / 2 == Money(5, "USD")
+
+
+def test_rtruediv_fails():
+    with pytest.raises(TypeError):
+        10 / Money(5, "USD")
+
+
+def test_truediv_money():
+    assert Money(10, "USD") / Money(2, "USD") == Decimal(5)
 
 
 @pytest.mark.parametrize("locale, expected", (("pl", "PL_PL"), ("pl_PL", "pl_PL")))
